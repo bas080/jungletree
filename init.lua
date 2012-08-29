@@ -8,7 +8,6 @@ minetest.register_node("jungletree:sapling", {
 	paramtype = "light",
 	walkable = false,
 	groups = {snappy=2,dig_immediate=3,flammable=2},
-
 })
 
 minetest.register_node("jungletree:tree", {
@@ -138,13 +137,10 @@ minetest.register_abm({
                     minetest.env:add_node({x=pos.x+1, y=pos.y+i, z=pos.z-1}, {name="jungletree:tree"})
                     minetest.env:add_node({x=pos.x, y=pos.y+i, z=pos.z-1}, {name="jungletree:tree"})
                     minetest.env:add_node({x=pos.x, y=pos.y+i, z=pos.z}, {name="jungletree:tree"})
-
+                    
                 end
-
             end
-
         end
-
     end,
 })
 
@@ -155,8 +151,8 @@ minetest.register_abm({
 
 minetest.register_on_generated(function(minp, maxp, seed)
      
-     generate("jungletree:sapling", {"default:dirt_with_grass"}, minp, maxp, 0, 20, 10, 50, {"default:water_source"})
+     generate("jungletree:sapling", {"default:dirt_with_grass"}, minp, maxp, 0, 20, 10, 50, {"default:water_source"},30,{"default:desert_sand"})
      
 end)
 
-
+print("[Jungletree] Loaded!")

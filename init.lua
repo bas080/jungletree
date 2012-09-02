@@ -162,4 +162,10 @@ minetest.register_abm({
 minetest.register_on_generated(function(minp, maxp, seed)
 	generate("jungletree:sapling", {"default:dirt_with_grass"}, minp, maxp, 0, 20, 10, 50, {"default:water_source"}, 30, {"default:desert_sand"})
 end)
+
+--old mod compatible
+minetest.register_alias("jungletree:leaves", "jungletree:leaves_green")
+
 print("[Jungletree] Loaded!") 
+
+

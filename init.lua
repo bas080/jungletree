@@ -1,25 +1,15 @@
 local leaves = {"green","yellow","red"}
 
-minetest.register_node("jungletree:sapling", {
-	description = "Jungle Tree Sapling",	
-	drawtype = "plantlike",	
-	visual_scale = 1.0,	
-	tiles = {"jungletree_sapling.png"},	
-	inventory_image = "jungletree_sapling.png",	
-	wield_image = "default_sapling.png",	
-	paramtype = "light",	
-	walkable = false,	
-	groups = {snappy=2,dig_immediate=3,flammable=2},
-})
-
---if minetest.setting_get("new_style_leaves") == true then
-	--leavesimg = {"jungletree_leaves_trans.png"}
---else
-	--leavesimg = {"jungletree_leaves.png"}
---end
+function addIfBoreable(pos,info)
+   local air = minetest.env:get_node_or_nil(pos)
+   if not air then return end
+   if (not (air.walkable or air.name:find('leaves'))) then
+      minetest.env:add_node(pos,info)
+   end
+end
 
 for color = 1, 3 do
-	local leave_name = "jungletree:leaves_"..leaves[color]
+   local leave_name = "jungletree:leaves_"..leaves[color]
 	minetest.register_node(leave_name, {
 		description = "Jungle Tree Leaves",
 		drawtype = "allfaces_optional",
@@ -48,11 +38,11 @@ end
 
 
 --[[ minetest.register_node("jungletree:tree", {
-	description = "Tree",	
-	tiles = {"default_tree_top.png", 
+	description = "Tree",
+	tiles = {"default_tree_top.png",
 	"default_tree_top.png",
-	"jungletree_bark.png"},	
-	is_ground_content = true,	
+	"jungletree_bark.png"},
+	is_ground_content = true,
 	groups = {tree=1,snappy=1,choppy=2,oddly_breakable_by_hand=1,flammable=2},
 }) --]]
 
@@ -75,8 +65,8 @@ local function add_tree_branch(pos)
 	if (chance < 2) then
 		leave = "jungletree:leaves_"..leaves[math.random(1,3)]
 	end
-	
-	minetest.env:add_node(pos, {name="default:jungletree"})
+
+	addIfBoreable(pos, {name="default:jungletree"})
 	for i = math.floor(math.random(2)), -math.floor(math.random(2)), -1 do
 		for k = math.floor(math.random(2)), -math.floor(math.random(2)), -1 do
 			local p = {x=pos.x+i, y=pos.y, z=pos.z+k}
@@ -97,14 +87,14 @@ local function add_tree_branch(pos)
 end
 minetest.register_abm({
 	nodenames = {"jungletree:sapling"},
-	interval = 1,
-	chance = 1,
+	interval = 50,
+	chance = 10,
 	action = function(pos, node)
 		local height = 5 + math.random(15)
 		if height < 10 then
 			for i = height, -1, -1 do
 				local p = {x=pos.x, y=pos.y+i, z=pos.z}
-				minetest.env:add_node(p, {name="default:jungletree"})
+				addIfBoreable(p, {name="default:jungletree"})
 				if i == height then
 					add_tree_branch({x=pos.x, y=pos.y+height+math.random(0, 1), z=pos.z})
 					add_tree_branch({x=pos.x+1, y=pos.y+i-math.random(2), z=pos.z})
@@ -113,10 +103,10 @@ minetest.register_abm({
 					add_tree_branch({x=pos.x, y=pos.y+i-math.random(2), z=pos.z-1})
 				end
 				if height <= 0 then
-					minetest.env:add_node({x=pos.x+1, y=pos.y+i-math.random(2), z=pos.z}, {name="default:jungletree"})
-					minetest.env:add_node({x=pos.x, y=pos.y+i-math.random(2), z=pos.z+1}, {name="default:jungletree"})
-					minetest.env:add_node({x=pos.x-1, y=pos.y+i-math.random(2), z=pos.z}, {name="default:jungletree"})
-					minetest.env:add_node({x=pos.x, y=pos.y+i-math.random(2), z=pos.z-1}, {name="default:jungletree"})
+					addIfBoreable({x=pos.x+1, y=pos.y+i-math.random(2), z=pos.z}, {name="default:jungletree"})
+					addIfBoreable({x=pos.x, y=pos.y+i-math.random(2), z=pos.z+1}, {name="default:jungletree"})
+					addIfBoreable({x=pos.x-1, y=pos.y+i-math.random(2), z=pos.z}, {name="default:jungletree"})
+					addIfBoreable({x=pos.x, y=pos.y+i-math.random(2), z=pos.z-1}, {name="default:jungletree"})
 				end
 				if (math.sin(i/height*i) < 0.2 and i > 3 and math.random(0,2) < 1.5) then
 					branch_pos = {x=pos.x+math.random(0,1), y=pos.y+i, z=pos.z-math.random(0,1)}
@@ -130,10 +120,10 @@ minetest.register_abm({
 					add_tree_branch(branch_pos)
 				end
 				if i < math.random(0,1) then
-					minetest.env:add_node({x=pos.x+1, y=pos.y+i, z=pos.z+1}, {name="default:jungletree"})
-					minetest.env:add_node({x=pos.x+2, y=pos.y+i, z=pos.z-1}, {name="default:jungletree"})
-					minetest.env:add_node({x=pos.x, y=pos.y+i, z=pos.z-2}, {name="default:jungletree"})
-					minetest.env:add_node({x=pos.x-1, y=pos.y+i, z=pos.z}, {name="default:jungletree"})
+					addIfBoreable({x=pos.x+1, y=pos.y+i, z=pos.z+1}, {name="default:jungletree"})
+					addIfBoreable({x=pos.x+2, y=pos.y+i, z=pos.z-1}, {name="default:jungletree"})
+					addIfBoreable({x=pos.x, y=pos.y+i, z=pos.z-2}, {name="default:jungletree"})
+					addIfBoreable({x=pos.x-1, y=pos.y+i, z=pos.z}, {name="default:jungletree"})
 				end
 				if i == height then
 					add_tree_branch({x=pos.x+1, y=pos.y+i, z=pos.z+1})
@@ -149,19 +139,32 @@ minetest.register_abm({
 					add_tree_branch({x=pos.x, y=pos.y+i, z=pos.z-1})
 					add_tree_branch({x=pos.x, y=pos.y+i, z=pos.z})
 				else
-					minetest.env:add_node({x=pos.x+1, y=pos.y+i, z=pos.z}, {name="default:jungletree"})
-					minetest.env:add_node({x=pos.x+1, y=pos.y+i, z=pos.z-1}, {name="default:jungletree"})
-					minetest.env:add_node({x=pos.x, y=pos.y+i, z=pos.z-1}, {name="default:jungletree"})
-					minetest.env:add_node({x=pos.x, y=pos.y+i, z=pos.z}, {name="default:jungletree"})
+					addIfBoreable({x=pos.x+1, y=pos.y+i, z=pos.z}, {name="default:jungletree"})
+					addIfBoreable({x=pos.x+1, y=pos.y+i, z=pos.z-1}, {name="default:jungletree"})
+					addIfBoreable({x=pos.x, y=pos.y+i, z=pos.z-1}, {name="default:jungletree"})
+					addIfBoreable({x=pos.x, y=pos.y+i, z=pos.z}, {name="default:jungletree"})
 				end
 			end
 		end
 	end,})
-	
---function anti_generate(node, surfaces, minp, maxp, height_min, height_max, spread, habitat_size, habitat_nodes) 
-minetest.register_on_generated(function(minp, maxp, seed)
-	generate("jungletree:sapling", {"default:dirt_with_grass"}, minp, maxp, 0, 20, 10, 50, {"default:water_source"}, 30, {"default:desert_sand"})
-end)
+
+--function anti_generate(node, surfaces, minp, maxp, height_min, height_max, spread, habitat_size, habitat_nodes)
+addFlower(
+   { description = "Jungle Tree Sapling",
+     name = "sapling",
+     id = "jungletree:sapling",
+     rarity = 50,
+     radius = 5,
+     avoid = {"jungletree:sapling","group:tree"},
+     register = {
+        drawtype = "plantlike",
+        visual_scale = 1.0,
+        tiles = {"jungletree_sapling.png"},
+        inventory_image = "jungletree_sapling.png",
+        wield_image = "default_sapling.png",
+        groups = {tree=1,snappy=2,dig_immediate=3,flammable=2}
+     }
+  })
 
 minetest.register_craft({
     output = 'default:wood 4',

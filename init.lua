@@ -1,3 +1,6 @@
+--Jungletree mod 
+--by:       bas080
+--licence:  WTFPL
 local leaves = {"green","yellow","red"}
 
 minetest.register_node("jungletree:sapling", {
@@ -95,6 +98,7 @@ local function add_tree_branch(pos)
 		end
 	end
 end
+
 minetest.register_abm({
 	nodenames = {"jungletree:sapling"},
 	interval = 500,
@@ -157,11 +161,8 @@ minetest.register_abm({
 			end
 		end
 	end,})
-	
---function anti_generate(node, surfaces, minp, maxp, height_min, height_max, spread, habitat_size, habitat_nodes) 
-minetest.register_on_generated(function(minp, maxp, seed)
-	generate("jungletree:sapling", {"default:dirt_with_grass"}, minp, maxp, 0, 20, 10, 50, {"default:water_source"}, 30, {"default:desert_sand"})
-end)
+
+habitat:generate("jungletree:sapling", {"default:dirt_with_grass"}, minp, maxp, 0, 20, 10, 50, {"default:water_source"}, 30, {"default:desert_sand"})
 
 minetest.register_craft({
     output = 'default:wood 4',
@@ -170,7 +171,6 @@ minetest.register_craft({
     }
 })
 
---old mod compatible
 minetest.register_alias("jungletree:leaves", "jungletree:leaves_green")
 
 print("[Jungletree] Loaded!")

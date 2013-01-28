@@ -1,5 +1,5 @@
 --Jungletree mod 
---by:       bas080
+--by:       bas080 some fixes by gloopmaster
 --licence:  WTFPL
 local leaves = {"green","yellow","red"}
 
